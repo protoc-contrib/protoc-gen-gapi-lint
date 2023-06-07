@@ -27,4 +27,4 @@ jobs:
           version: latest
           args: release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
