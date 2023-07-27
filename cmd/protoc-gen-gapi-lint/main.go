@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint"
+	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/jhump/protoreflect/desc"
-	"github.com/protoc-extensions/protoc-gen-gapi-lint/internal/lint"
-	"github.com/protoc-extensions/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/spf13/pflag"
 	"google.golang.org/protobuf/compiler/protogen"
 )
