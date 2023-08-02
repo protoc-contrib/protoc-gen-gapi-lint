@@ -27,16 +27,8 @@ func NewEncoder(writer io.Writer, format string) Encoder {
 
 // NewWriter creates a new writer
 func NewWriter(path string) (io.WriteCloser, error) {
-	writer := io.WriteCloser(os.Stderr)
-
 	if path != "" {
-		var err error
-
-		writer, err = os.Create(path)
-		if err != nil {
-			return nil, err
-		}
+		return os.Create(path)
 	}
-
-	return writer, nil
+	return io.WriteCloser(os.Stderr), nil
 }

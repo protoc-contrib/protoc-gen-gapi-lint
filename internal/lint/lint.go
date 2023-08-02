@@ -42,16 +42,14 @@ func New(config *Config) (*lint.Linter, error) {
 		options = append(options, fconfig...)
 	}
 
-	// Add configs for the enabled rules.
 	options = append(options, lint.Config{
 		EnabledRules: config.EnabledRules,
 	})
-	// Add configs for the disabled rules.
+
 	options = append(options, lint.Config{
 		DisabledRules: config.DisabledRules,
 	})
 
 	linter := lint.New(registry, options, lint.IgnoreCommentDisables(config.IgnoreCommentDisables))
-	// so far so good :)
 	return linter, nil
 }

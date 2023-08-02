@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint"
 	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/jhump/protoreflect/desc"
@@ -11,8 +13,8 @@ import (
 func NewFlagSet(config *lint.Config) *pflag.FlagSet {
 	args := pflag.NewFlagSet("protoc-gen-gapi-lint", pflag.ExitOnError)
 	args.StringVar(&config.Path, "config", "", "The linter config file.")
-	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\", \"json\",\"github\" and \"summary\" table.\nYAML is the default.")
-	args.StringVarP(&config.OutputPath, "output-path", "o", "", "The output file path.\nIf not given, the linting results will be printed out to STDOUT.")
+	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\", \"json\", and \"summary\" table.\nYAML is the default.")
+	args.StringVarP(&config.OutputPath, "output-path", "o", "", "The output file path.\nIf not given, the linting results will be printed out to STDERR.")
 	args.StringArrayVar(&config.EnabledRules, "enable-rule", nil, "Enable a rule with the given name.\nMay be specified multiple times.")
 	args.StringArrayVar(&config.DisabledRules, "disable-rule", nil, "Disable a rule with the given name.\nMay be specified multiple times.")
 	args.BoolVar(&config.IgnoreCommentDisables, "ignore-comment-disables", false, "If set to true, disable comments will be ignored.\nThis is helpful when strict enforcement of AIPs are necessary and\nproto definitions should not be able to disable checks.")
@@ -22,9 +24,7 @@ func NewFlagSet(config *lint.Config) *pflag.FlagSet {
 func main() {
 	config := &lint.Config{}
 
-	// create the arguments
 	args := NewFlagSet(config)
-	// create the handler
 	handler := protogen.Options{
 		ParamFunc: args.Set,
 	}
@@ -53,29 +53,24 @@ func main() {
 			}
 
 			for _, item := range batch {
-				if count := len(item.Problems); count == 0 {
-					continue
+				if len(item.Problems) != 0 {
+					collection = append(collection, item)
 				}
-
-				collection = append(collection, item)
 			}
 		}
 
-		if count := len(collection); count == 0 {
-			return nil
-		}
+		if len(collection) != 0 {
+			writer, err := format.NewWriter(config.OutputPath)
+			if err != nil {
+				return err
+			}
+			defer writer.Close()
 
-		writer, err := format.NewWriter(config.OutputPath)
-		if err != nil {
-			return err
-		}
-		// close the writer
-		defer writer.Close()
+			if err := format.NewEncoder(writer, config.OutputFormat).Encode(collection); err != nil {
+				return err
+			}
 
-		encoder := format.NewEncoder(writer, config.OutputFormat)
-		// encode the collection
-		if err := encoder.Encode(collection); err != nil {
-			return err
+			return fmt.Errorf("found %d error(s), see report in %s for more details", len(collection), config.OutputPath)
 		}
 
 		return nil
