@@ -2,33 +2,65 @@ package format
 
 import (
 	"encoding/json"
-	"io"
-	"os"
 
+	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint"
 	"gopkg.in/yaml.v2"
 )
 
-// Encoder represents an encoder
-type Encoder interface {
-	Encode(interface{}) error
+// This is a hack to get Problems to unmarshal correctly because
+// the Problem type contains a protobuf field which can't be
+// unmarshaled using yaml/json libs
+type Response struct {
+	FilePath string        `json:"file_path" yaml:"file_path"`
+	Problems []interface{} `json:"problems" yaml:"problems"`
 }
 
-// NewEncoder creates a new encoder
-func NewEncoder(writer io.Writer, format string) Encoder {
+func Decode(data []byte, format string) ([]Response, error) {
+	var collection []Response
 	switch format {
 	case "yaml", "yml":
-		return yaml.NewEncoder(writer)
+		return collection, yaml.Unmarshal(data, &collection)
 	case "json":
-		return json.NewEncoder(writer)
+		return collection, json.Unmarshal(data, &collection)
 	default:
-		return yaml.NewEncoder(writer)
+		return collection, yaml.Unmarshal(data, &collection)
 	}
 }
 
-// NewWriter creates a new writer
-func NewWriter(path string) (io.WriteCloser, error) {
-	if path != "" {
-		return os.Create(path)
+func Encode(collection []Response, format string) ([]byte, error) {
+	switch format {
+	case "yaml", "yml":
+		return yaml.Marshal(collection)
+	case "json":
+		return json.Marshal(collection)
+	default:
+		return yaml.Marshal(collection)
 	}
-	return io.WriteCloser(os.Stderr), nil
+}
+
+func ConvertLintReponsesToLocalReponses(collection []lint.Response) ([]Response, error) {
+	result := []Response{}
+
+	for _, response := range collection {
+		r := Response{
+			FilePath: response.FilePath,
+		}
+
+		for _, problem := range response.Problems {
+			result, err := problem.MarshalJSON()
+			if err != nil {
+				return nil, err
+			}
+			var remarshaled interface{}
+			if err := json.Unmarshal(result, &remarshaled); err != nil {
+				return nil, err
+			}
+
+			r.Problems = append(r.Problems, remarshaled)
+		}
+
+		result = append(result, r)
+	}
+
+	return result, nil
 }
