@@ -19,9 +19,7 @@ func init() {
 type Config struct {
 	Path                  string
 	OutputFormat          string
-	OutputPath            string
-	EnabledRules          []string
-	DisabledRules         []string
+	ExcludedPaths         []string
 	IgnoreCommentDisables bool
 }
 
@@ -30,7 +28,7 @@ type Response = lint.Response
 
 // New returns a new linter
 func New(config *Config) (*lint.Linter, error) {
-	var options lint.Configs
+	options := lint.Configs{}
 
 	// Read linter config and append it to the default.
 	if config.Path != "" {
@@ -39,16 +37,8 @@ func New(config *Config) (*lint.Linter, error) {
 			return nil, err
 		}
 
-		options = append(options, fconfig...)
+		options = fconfig
 	}
-
-	options = append(options, lint.Config{
-		EnabledRules: config.EnabledRules,
-	})
-
-	options = append(options, lint.Config{
-		DisabledRules: config.DisabledRules,
-	})
 
 	linter := lint.New(registry, options, lint.IgnoreCommentDisables(config.IgnoreCommentDisables))
 	return linter, nil
