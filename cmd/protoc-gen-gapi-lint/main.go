@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/bmatcuk/doublestar"
-	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint"
-	"github.com/felipeparaujo/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/jhump/protoreflect/desc"
+	"github.com/sensat/protoc-gen-gapi-lint/internal/lint"
+	"github.com/sensat/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/spf13/pflag"
 	"google.golang.org/protobuf/compiler/protogen"
 )
