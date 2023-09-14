@@ -19,7 +19,6 @@ func init() {
 type Config struct {
 	Path                  string
 	OutputFormat          string
-	ExcludedPaths         []string
 	IgnoreCommentDisables bool
 }
 

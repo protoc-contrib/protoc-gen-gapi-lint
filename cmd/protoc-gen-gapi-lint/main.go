@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bmatcuk/doublestar"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/sensat/protoc-gen-gapi-lint/internal/lint"
 	"github.com/sensat/protoc-gen-gapi-lint/internal/lint/format"
@@ -15,7 +14,6 @@ import (
 func NewFlagSet(config *lint.Config) *pflag.FlagSet {
 	args := pflag.NewFlagSet("protoc-gen-gapi-lint", pflag.ExitOnError)
 	args.StringVar(&config.Path, "config", "", "The linter config file.")
-	args.StringArrayVar(&config.ExcludedPaths, "excluded-paths", nil, "Enable a rule with the given name.\nMay be specified multiple times.")
 	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\", \"json\", and \"summary\" table.\nYAML is the default.")
 	args.BoolVar(&config.IgnoreCommentDisables, "ignore-comment-disables", false, "If set to true, disable comments will be ignored.\nThis is helpful when strict enforcement of AIPs are necessary and\nproto definitions should not be able to disable checks.")
 	return args
@@ -37,7 +35,6 @@ func main() {
 			return err
 		}
 
-	fileloop:
 		for _, file := range plugin.Files {
 			if !file.Generate {
 				continue
@@ -46,12 +43,6 @@ func main() {
 			fdesc, err := desc.WrapFile(file.Desc)
 			if err != nil {
 				return err
-			}
-
-			for _, pattern := range config.ExcludedPaths {
-				if matched, _ := doublestar.Match(pattern, fdesc.GetName()); matched {
-					continue fileloop
-				}
 			}
 
 			batch, err := linter.LintProtos(fdesc)

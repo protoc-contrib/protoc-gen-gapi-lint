@@ -3,7 +3,6 @@ module github.com/sensat/protoc-gen-gapi-lint
 go 1.20
 
 require (
-	github.com/bmatcuk/doublestar v1.3.4
 	github.com/googleapis/api-linter v1.57.1
 	github.com/jhump/protoreflect v1.15.2
 	github.com/spf13/pflag v1.0.5
