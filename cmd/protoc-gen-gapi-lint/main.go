@@ -9,12 +9,13 @@ import (
 	"github.com/sensat/protoc-gen-gapi-lint/internal/lint/format"
 	"github.com/spf13/pflag"
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/types/pluginpb"
 )
 
 func NewFlagSet(config *lint.Config) *pflag.FlagSet {
 	args := pflag.NewFlagSet("protoc-gen-gapi-lint", pflag.ExitOnError)
 	args.StringVar(&config.Path, "config", "", "The linter config file.")
-	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\", \"json\", and \"summary\" table.\nYAML is the default.")
+	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\" and \"json\".\nYAML is the default.")
 	args.BoolVar(&config.IgnoreCommentDisables, "ignore-comment-disables", false, "If set to true, disable comments will be ignored.\nThis is helpful when strict enforcement of AIPs are necessary and\nproto definitions should not be able to disable checks.")
 	return args
 }
@@ -28,6 +29,8 @@ func main() {
 	}
 
 	handler.Run(func(plugin *protogen.Plugin) error {
+		plugin.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
+
 		var collection []lint.Response
 
 		linter, err := lint.New(config)
