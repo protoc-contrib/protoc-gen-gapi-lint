@@ -1,0 +1,402 @@
+{
+  "repository": "protoc-contrib/protoc-gen-gapi-lint",
+  "ref": "refs/heads/main",
+  "commit": "b8edd07d054871189b72c884899a4bd2e14e4c32",
+  "coverage": {
+    "type": "statement",
+    "format": "Go coverage",
+    "total": 63,
+    "covered": 55,
+    "files": [
+      {
+        "type": "statement",
+        "file": "github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter/format.go",
+        "normalized_path": "internal/linter/format.go",
+        "total": 50,
+        "covered": 43,
+        "blocks": [
+          {
+            "type": "statement",
+            "start_line": 32,
+            "start_col": 67,
+            "end_line": 33,
+            "end_col": 16,
+            "num_stmt": 1,
+            "count": 11
+          },
+          {
+            "type": "statement",
+            "start_line": 34,
+            "start_col": 25,
+            "end_line": 35,
+            "end_col": 38,
+            "num_stmt": 1,
+            "count": 4
+          },
+          {
+            "type": "statement",
+            "start_line": 36,
+            "start_col": 14,
+            "end_line": 37,
+            "end_col": 38,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 38,
+            "start_col": 16,
+            "end_line": 39,
+            "end_col": 40,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 40,
+            "start_col": 17,
+            "end_line": 41,
+            "end_col": 41,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 42,
+            "start_col": 10,
+            "end_line": 43,
+            "end_col": 107,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 50,
+            "start_col": 53,
+            "end_line": 51,
+            "end_col": 16,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 51,
+            "start_col": 16,
+            "end_line": 53,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 55,
+            "start_col": 2,
+            "end_line": 56,
+            "end_col": 16,
+            "num_stmt": 2,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 56,
+            "start_col": 16,
+            "end_line": 58,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 60,
+            "start_col": 2,
+            "end_line": 60,
+            "end_col": 20,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 71,
+            "start_col": 45,
+            "end_line": 73,
+            "end_col": 9,
+            "num_stmt": 2,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 73,
+            "start_col": 9,
+            "end_line": 75,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 77,
+            "start_col": 2,
+            "end_line": 77,
+            "end_col": 33,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 77,
+            "start_col": 33,
+            "end_line": 78,
+            "end_col": 35,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 78,
+            "start_col": 35,
+            "end_line": 81,
+            "end_col": 54,
+            "num_stmt": 2,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 81,
+            "start_col": 54,
+            "end_line": 84,
+            "end_col": 5,
+            "num_stmt": 2,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 84,
+            "start_col": 10,
+            "end_line": 84,
+            "end_col": 34,
+            "num_stmt": 1,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 84,
+            "start_col": 34,
+            "end_line": 88,
+            "end_col": 5,
+            "num_stmt": 3,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 90,
+            "start_col": 4,
+            "end_line": 91,
+            "end_col": 51,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 95,
+            "start_col": 2,
+            "end_line": 95,
+            "end_col": 12,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 105,
+            "start_col": 46,
+            "end_line": 107,
+            "end_col": 9,
+            "num_stmt": 2,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 107,
+            "start_col": 9,
+            "end_line": 109,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 111,
+            "start_col": 2,
+            "end_line": 115,
+            "end_col": 33,
+            "num_stmt": 4,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 115,
+            "start_col": 33,
+            "end_line": 117,
+            "end_col": 35,
+            "num_stmt": 2,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 117,
+            "start_col": 35,
+            "end_line": 120,
+            "end_col": 4,
+            "num_stmt": 2,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 123,
+            "start_col": 2,
+            "end_line": 129,
+            "end_col": 29,
+            "num_stmt": 5,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 129,
+            "start_col": 29,
+            "end_line": 131,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 132,
+            "start_col": 2,
+            "end_line": 134,
+            "end_col": 29,
+            "num_stmt": 2,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 134,
+            "start_col": 29,
+            "end_line": 136,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 138,
+            "start_col": 2,
+            "end_line": 141,
+            "end_col": 19,
+            "num_stmt": 3,
+            "count": 1
+          }
+        ]
+      },
+      {
+        "type": "statement",
+        "file": "github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter/linter.go",
+        "normalized_path": "internal/linter/linter.go",
+        "total": 13,
+        "covered": 12,
+        "blocks": [
+          {
+            "type": "statement",
+            "start_line": 20,
+            "start_col": 27,
+            "end_line": 21,
+            "end_col": 25,
+            "num_stmt": 1,
+            "count": 4
+          },
+          {
+            "type": "statement",
+            "start_line": 21,
+            "start_col": 25,
+            "end_line": 23,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 24,
+            "start_col": 2,
+            "end_line": 24,
+            "end_col": 20,
+            "num_stmt": 1,
+            "count": 4
+          },
+          {
+            "type": "statement",
+            "start_line": 51,
+            "start_col": 48,
+            "end_line": 52,
+            "end_col": 39,
+            "num_stmt": 1,
+            "count": 4
+          },
+          {
+            "type": "statement",
+            "start_line": 52,
+            "start_col": 39,
+            "end_line": 54,
+            "end_col": 3,
+            "num_stmt": 1,
+            "count": 0
+          },
+          {
+            "type": "statement",
+            "start_line": 56,
+            "start_col": 2,
+            "end_line": 58,
+            "end_col": 23,
+            "num_stmt": 2,
+            "count": 4
+          },
+          {
+            "type": "statement",
+            "start_line": 58,
+            "start_col": 23,
+            "end_line": 60,
+            "end_col": 17,
+            "num_stmt": 2,
+            "count": 2
+          },
+          {
+            "type": "statement",
+            "start_line": 60,
+            "start_col": 17,
+            "end_line": 62,
+            "end_col": 4,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 64,
+            "start_col": 3,
+            "end_line": 64,
+            "end_col": 40,
+            "num_stmt": 1,
+            "count": 1
+          },
+          {
+            "type": "statement",
+            "start_line": 67,
+            "start_col": 2,
+            "end_line": 68,
+            "end_col": 20,
+            "num_stmt": 2,
+            "count": 3
+          }
+        ]
+      }
+    ]
+  },
+  "test_execution_time": 53000000000,
+  "timestamp": "2026-04-17T04:26:29.435509025Z"
+}
