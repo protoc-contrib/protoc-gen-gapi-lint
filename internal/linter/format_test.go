@@ -12,7 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 	"google.golang.org/protobuf/types/descriptorpb"
 
-	"github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter"
+	"github.com/protoc-contrib/protoc-gen-aip-lint/internal/linter"
 )
 
 func testResponses() []lint.Response {

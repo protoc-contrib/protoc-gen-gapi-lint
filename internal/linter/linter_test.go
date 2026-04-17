@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter"
+	"github.com/protoc-contrib/protoc-gen-aip-lint/internal/linter"
 )
 
 var _ = Describe("Linter", func() {

@@ -1,5 +1,5 @@
 {
-  description = "protoc-gen-gapi-lint - A protoc plugin for the Google API Linter";
+  description = "protoc-gen-aip-lint - A protoc plugin for the Google API Linter";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -16,21 +16,21 @@
       in
       {
         packages.default = pkgs.buildGoModule {
-          pname = "protoc-gen-gapi-lint";
+          pname = "protoc-gen-aip-lint";
           inherit version;
           src = pkgs.lib.cleanSource ./.;
-          subPackages = [ "cmd/protoc-gen-gapi-lint" ];
+          subPackages = [ "cmd/protoc-gen-aip-lint" ];
           vendorHash = null;
           ldflags = [ "-s" "-w" "-X main.version=${version}" ];
           meta = with pkgs.lib; {
             description = "A protoc plugin for the Google API Linter";
             license = licenses.mit;
-            mainProgram = "protoc-gen-gapi-lint";
+            mainProgram = "protoc-gen-aip-lint";
           };
         };
 
         devShells.default = pkgs.mkShell {
-          name = "protoc-gen-gapi-lint";
+          name = "protoc-gen-aip-lint";
           packages = [
             pkgs.go
           ];

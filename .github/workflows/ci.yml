@@ -79,10 +79,10 @@ jobs:
 
       - name: Prepare Release Assets
         run: |
-          mkdir -p release && install -m 0755 result/bin/protoc-gen-gapi-lint release/protoc-gen-gapi-lint-${{ matrix.nix_system }}
+          mkdir -p release && install -m 0755 result/bin/protoc-gen-aip-lint release/protoc-gen-aip-lint-${{ matrix.nix_system }}
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.release.outputs.tag_name }}
-          files: release/protoc-gen-gapi-lint-${{ matrix.nix_system }}
+          files: release/protoc-gen-aip-lint-${{ matrix.nix_system }}

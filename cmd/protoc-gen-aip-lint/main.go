@@ -8,16 +8,16 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter"
+	"github.com/protoc-contrib/protoc-gen-aip-lint/internal/linter"
 	"github.com/urfave/cli/v3"
 	"google.golang.org/protobuf/compiler/protogen"
 )
 
 func main() {
 	app := &cli.Command{
-		Name:      "protoc-gen-gapi-lint",
+		Name:      "protoc-gen-aip-lint",
 		Usage:     "A protoc plugin for the Google API Linter",
-		UsageText: "protoc-gen-gapi-lint [global options]",
+		UsageText: "protoc-gen-aip-lint [global options]",
 		ErrWriter: os.Stderr,
 		Action: func(_ context.Context, _ *cli.Command) error {
 			cfg := &linter.Config{}

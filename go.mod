@@ -1,4 +1,4 @@
-module github.com/protoc-contrib/protoc-gen-gapi-lint
+module github.com/protoc-contrib/protoc-gen-aip-lint
 
 go 1.25.8
 

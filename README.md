@@ -1,11 +1,11 @@
-# protoc-gen-gapi-lint
+# protoc-gen-aip-lint
 
-[![CI](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/protoc-contrib/protoc-gen-gapi-lint?include_prereleases)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/releases)
+[![CI](https://github.com/protoc-contrib/protoc-gen-aip-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/protoc-contrib/protoc-gen-aip-lint/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/protoc-contrib/protoc-gen-aip-lint?include_prereleases)](https://github.com/protoc-contrib/protoc-gen-aip-lint/releases)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev)
 [![protoc](https://img.shields.io/badge/protoc-compatible-blue)](https://protobuf.dev)
-[![Coverage](https://raw.githubusercontent.com/protoc-contrib/protoc-gen-gapi-lint/main/.github/octocov/badge.svg)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml)
+[![Coverage](https://raw.githubusercontent.com/protoc-contrib/protoc-gen-aip-lint/main/.github/octocov/badge.svg)](https://github.com/protoc-contrib/protoc-gen-aip-lint/actions/workflows/ci.yml)
 
 A [protoc](https://protobuf.dev) plugin that runs the [Google API Linter](https://github.com/googleapis/api-linter) on your Protocol Buffer files. It checks `.proto` files against the [AIP](https://aip.dev) style guidelines and reports problems in multiple output formats.
 
@@ -20,7 +20,7 @@ A [protoc](https://protobuf.dev) plugin that runs the [Google API Linter](https:
 ## Installation
 
 ```bash
-go install github.com/protoc-contrib/protoc-gen-gapi-lint/cmd/protoc-gen-gapi-lint@latest
+go install github.com/protoc-contrib/protoc-gen-aip-lint/cmd/protoc-gen-aip-lint@latest
 ```
 
 ## Usage
@@ -34,7 +34,7 @@ version: v2
 plugins:
   - protoc_builtin: cpp
     out: gen/proto/cpp
-  - local: protoc-gen-gapi-lint
+  - local: protoc-gen-aip-lint
     out: .
     opt:
       - output-format=github
@@ -51,15 +51,15 @@ buf generate
 
 ```bash
 protoc \
-  --gapi-lint_out=. \
-  --gapi-lint_opt=output-format=github,set-exit-status \
+  --aip-lint_out=. \
+  --aip-lint_opt=output-format=github,set-exit-status \
   -I proto/ \
   proto/example/v1/example.proto
 ```
 
 ## Plugin Options
 
-Options are passed via `--gapi-lint_opt` (protoc) or `opt` (buf). Multiple
+Options are passed via `--aip-lint_opt` (protoc) or `opt` (buf). Multiple
 options are comma-separated.
 
 | Option                    | Description                                                        |
@@ -135,8 +135,8 @@ Pass the config file path as a plugin option:
 
 ```bash
 protoc \
-  --gapi-lint_out=. \
-  --gapi-lint_opt=config=api-linter.yaml \
+  --aip-lint_out=. \
+  --aip-lint_opt=config=api-linter.yaml \
   proto/example/v1/example.proto
 ```
 
@@ -159,7 +159,7 @@ Where `buf.gen.lint.yaml` contains:
 ```yaml
 version: v2
 plugins:
-  - local: protoc-gen-gapi-lint
+  - local: protoc-gen-aip-lint
     out: .
     opt:
       - output-format=github
