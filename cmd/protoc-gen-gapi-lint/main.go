@@ -1,83 +1,128 @@
 package main
 
 import (
-	"github.com/jhump/protoreflect/desc"
-	"github.com/protoc-extensions/protoc-gen-gapi-lint/internal/lint"
-	"github.com/protoc-extensions/protoc-gen-gapi-lint/internal/lint/format"
-	"github.com/spf13/pflag"
+	"context"
+	"fmt"
+	"log/slog"
+	"os"
+	"runtime/debug"
+	"strings"
+
+	"github.com/protoc-contrib/protoc-gen-gapi-lint/internal/linter"
+	"github.com/urfave/cli/v3"
 	"google.golang.org/protobuf/compiler/protogen"
 )
 
-func NewFlagSet(config *lint.Config) *pflag.FlagSet {
-	args := pflag.NewFlagSet("protoc-gen-gapi-lint", pflag.ExitOnError)
-	args.StringVar(&config.Path, "config", "", "The linter config file.")
-	args.StringVar(&config.OutputFormat, "output-format", "", "The format of the linting results.\nSupported formats include \"yaml\", \"json\",\"github\" and \"summary\" table.\nYAML is the default.")
-	args.StringVarP(&config.OutputPath, "output-path", "o", "", "The output file path.\nIf not given, the linting results will be printed out to STDOUT.")
-	args.StringArrayVar(&config.EnabledRules, "enable-rule", nil, "Enable a rule with the given name.\nMay be specified multiple times.")
-	args.StringArrayVar(&config.DisabledRules, "disable-rule", nil, "Disable a rule with the given name.\nMay be specified multiple times.")
-	args.BoolVar(&config.IgnoreCommentDisables, "ignore-comment-disables", false, "If set to true, disable comments will be ignored.\nThis is helpful when strict enforcement of AIPs are necessary and\nproto definitions should not be able to disable checks.")
-	return args
-}
-
 func main() {
-	config := &lint.Config{}
+	app := &cli.Command{
+		Name:      "protoc-gen-gapi-lint",
+		Usage:     "A protoc plugin for the Google API Linter",
+		UsageText: "protoc-gen-gapi-lint [global options]",
+		ErrWriter: os.Stderr,
+		Action: func(_ context.Context, _ *cli.Command) error {
+			cfg := &linter.Config{}
 
-	// create the arguments
-	args := NewFlagSet(config)
-	// create the handler
-	handler := protogen.Options{
-		ParamFunc: args.Set,
-	}
+			var (
+				outputFormat  string
+				outputPath    string
+				setExitStatus bool
+			)
 
-	handler.Run(func(plugin *protogen.Plugin) error {
-		var collection []lint.Response
-
-		linter, err := lint.New(config)
-		if err != nil {
-			return err
-		}
-
-		for _, file := range plugin.Files {
-			if !file.Generate {
-				continue
+			// protoc passes plugin options via the CodeGeneratorRequest parameter
+			// field, not as CLI flags. ParamFunc applies each key=value pair from
+			// protoc to the config.
+			handler := protogen.Options{
+				ParamFunc: func(name, value string) error {
+					switch name {
+					case "config":
+						cfg.Path = value
+					case "ignore-comment-disables":
+						cfg.IgnoreCommentDisables = value == "" || value == "true"
+					case "output-format":
+						outputFormat = value
+					case "output-path":
+						outputPath = value
+					case "set-exit-status":
+						setExitStatus = value == "" || value == "true"
+					default:
+						if strings.HasPrefix(name, "paths") {
+							return nil
+						}
+						return fmt.Errorf("unknown parameter: %q", name)
+					}
+					return nil
+				},
 			}
 
-			fdesc, err := desc.WrapFile(file.Desc)
-			if err != nil {
-				return err
-			}
+			// protogen.Options.Run reads from stdin, runs the handler, writes to
+			// stdout, and calls os.Exit on failure. It does not return.
+			handler.Run(func(plugin *protogen.Plugin) error {
+				var collection []linter.Response
 
-			batch, err := linter.LintProtos(fdesc)
-			if err != nil {
-				return err
-			}
-
-			for _, item := range batch {
-				if count := len(item.Problems); count == 0 {
-					continue
+				verifier, err := linter.New(cfg)
+				if err != nil {
+					return err
 				}
 
-				collection = append(collection, item)
-			}
-		}
+				for _, file := range plugin.Files {
+					if !file.Generate {
+						continue
+					}
 
-		if count := len(collection); count == 0 {
+					batch, xerr := verifier.LintProtos(file.Desc)
+					if xerr != nil {
+						return xerr
+					}
+
+					for _, item := range batch {
+						if len(item.Problems) > 0 {
+							collection = append(collection, item)
+						}
+					}
+				}
+
+				if len(collection) == 0 {
+					return nil
+				}
+
+				writer, err := linter.NewWriter(outputPath)
+				if err != nil {
+					return err
+				}
+				defer writer.Close()
+
+				encoder, err := linter.NewEncoder(writer, outputFormat)
+				if err != nil {
+					return err
+				}
+
+				if err := encoder.Encode(collection); err != nil {
+					return err
+				}
+
+				if setExitStatus {
+					total := 0
+					for _, r := range collection {
+						total += len(r.Problems)
+					}
+					return fmt.Errorf("found %d lint problem(s) across %d file(s)", total, len(collection))
+				}
+
+				return nil
+			})
+
 			return nil
-		}
+		},
+	}
 
-		writer, err := format.NewWriter(config.OutputPath)
-		if err != nil {
-			return err
-		}
-		// close the writer
-		defer writer.Close()
+	if info, ok := debug.ReadBuildInfo(); ok {
+		app.Version = info.Main.Version
+	}
 
-		encoder := format.NewEncoder(writer, config.OutputFormat)
-		// encode the collection
-		if err := encoder.Encode(collection); err != nil {
-			return err
-		}
-
-		return nil
-	})
+	ctx := context.Background()
+	// start the application
+	if err := app.Run(ctx, os.Args); err != nil {
+		slog.ErrorContext(ctx, "The linter has encountered a fatal error", slog.Any("error", err))
+		os.Exit(1)
+	}
 }
