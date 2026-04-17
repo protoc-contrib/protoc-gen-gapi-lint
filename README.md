@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/protoc-contrib/protoc-gen-gapi-lint?include_prereleases)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/releases)
-[![License](https://img.shields.io/github/license/protoc-contrib/protoc-gen-gapi-lint)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev)
 [![protoc](https://img.shields.io/badge/protoc-compatible-blue)](https://protobuf.dev)
 [![Coverage](https://raw.githubusercontent.com/protoc-contrib/protoc-gen-gapi-lint/main/.github/octocov/badge.svg)](https://github.com/protoc-contrib/protoc-gen-gapi-lint/actions/workflows/ci.yml)
