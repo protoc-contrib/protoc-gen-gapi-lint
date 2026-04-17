@@ -13,6 +13,10 @@ import (
 	"google.golang.org/protobuf/compiler/protogen"
 )
 
+// version is set at build time via ldflags (e.g. -X main.version=0.1.0).
+// When empty, the version falls back to the Go module build info.
+var version string
+
 func main() {
 	app := &cli.Command{
 		Name:      "protoc-gen-aip-lint",
@@ -115,7 +119,9 @@ func main() {
 		},
 	}
 
-	if info, ok := debug.ReadBuildInfo(); ok {
+	if version != "" {
+		app.Version = version
+	} else if info, ok := debug.ReadBuildInfo(); ok {
 		app.Version = info.Main.Version
 	}
 

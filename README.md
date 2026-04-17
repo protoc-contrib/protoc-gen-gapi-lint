@@ -174,7 +174,7 @@ To set up a development environment with [Nix](https://nixos.org):
 
 ```bash
 nix develop
-make test
+go test ./...
 ```
 
 ## License
