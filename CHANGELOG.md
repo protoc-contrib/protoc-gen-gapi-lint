@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/protoc-contrib/protoc-gen-aip-lint/compare/v0.1.1...v0.2.0) (2026-04-18)
+
+
+### Features
+
+* add proto3 optional feature support to code generator ([625fe20](https://github.com/protoc-contrib/protoc-gen-aip-lint/commit/625fe20efe9e9e33d775e37105ab4f99f3e646d2))
+
 ## [0.1.1](https://github.com/protoc-contrib/protoc-gen-aip-lint/compare/v0.1.0...v0.1.1) (2026-04-17)
 
 
