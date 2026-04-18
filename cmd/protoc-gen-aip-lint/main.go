@@ -11,6 +11,7 @@ import (
 	"github.com/protoc-contrib/protoc-gen-aip-lint/internal/linter"
 	"github.com/urfave/cli/v3"
 	"google.golang.org/protobuf/compiler/protogen"
+	"google.golang.org/protobuf/types/pluginpb"
 )
 
 // version is set at build time via ldflags (e.g. -X main.version=0.1.0).
@@ -61,6 +62,8 @@ func main() {
 			// protogen.Options.Run reads from stdin, runs the handler, writes to
 			// stdout, and calls os.Exit on failure. It does not return.
 			handler.Run(func(plugin *protogen.Plugin) error {
+				plugin.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
+
 				var collection []linter.Response
 
 				verifier, err := linter.New(cfg)
