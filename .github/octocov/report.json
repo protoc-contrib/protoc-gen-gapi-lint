@@ -1,7 +1,7 @@
 {
   "repository": "protoc-contrib/protoc-gen-aip-lint",
   "ref": "refs/heads/main",
-  "commit": "fb81c2dd146a3010849aeedd948e96bc46434867",
+  "commit": "580d1dda4b7f51356e54604e51493e03db297683",
   "coverage": {
     "type": "statement",
     "format": "Go coverage",
@@ -397,6 +397,6 @@
       }
     ]
   },
-  "test_execution_time": 48000000000,
-  "timestamp": "2026-04-18T07:24:08.715286143Z"
+  "test_execution_time": 50000000000,
+  "timestamp": "2026-04-20T05:45:37.726377511Z"
 }
