@@ -5,7 +5,6 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.25-00ADD8?logo=go&logoColor=white)](https://go.dev)
 [![protoc](https://img.shields.io/badge/protoc-compatible-blue)](https://protobuf.dev)
-[![Coverage](https://raw.githubusercontent.com/protoc-contrib/protoc-gen-aip-lint/main/.github/octocov/badge.svg)](https://github.com/protoc-contrib/protoc-gen-aip-lint/actions/workflows/ci.yml)
 
 A [protoc](https://protobuf.dev) plugin that runs the [Google API Linter](https://github.com/googleapis/api-linter) on your Protocol Buffer files. It checks `.proto` files against the [AIP](https://aip.dev) style guidelines and reports problems in multiple output formats.
 
