@@ -1,6 +1,4 @@
 coverage:
-  badge:
-    path: .github/octocov/badge.svg
   paths:
     - coverage.out
   acceptable: 80%

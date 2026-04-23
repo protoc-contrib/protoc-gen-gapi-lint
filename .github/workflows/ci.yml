@@ -1,38 +1,87 @@
 name: CI
 
-permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v22
 
       - name: Setup Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v13
+        with:
+          use-flakehub: disabled
+          use-gha-cache: enabled
 
       - name: Run Tests
-        run: nix develop --command go tool ginkgo run -r -coverprofile=coverage.out -covermode=atomic ./...
+        run: |
+          nix develop --command go tool ginkgo run -r \
+            -coverprofile=coverage.out -covermode=atomic ./...
 
-      - name: Run octocov
+      - name: Run Octocov
         uses: k1LoW/octocov-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            nix_system: x86_64-linux
+          - os: macos-14
+            nix_system: aarch64-darwin
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    env:
+      BIN_PATH: sqlc-gen-queries-${{ matrix.nix_system }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Setup Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v13
+        with:
+          use-flakehub: disabled
+          use-gha-cache: enabled
+
+      - name: Build with Nix
+        run: nix build . --system ${{ matrix.nix_system }}
+
+      - name: Prepare Binary
+        run: install -m 0755 result/bin/sqlc-gen-queries "$BIN_PATH"
+
+      - name: Upload Binary
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ env.BIN_PATH }}
+          archive: false
+          if-no-files-found: error
+          retention-days: 1
 
   release:
     needs: build
@@ -41,48 +90,43 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Create Release PR
         id: release
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           manifest-file: .github/config/release-please-manifest.json
           config-file: .github/config/release-please-config.json
           target-branch: main
 
-  build-release:
+  publish:
     needs: release
-    if: ${{ needs.release.outputs.release_created }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            nix_system: x86_64-linux
-          - os: macos-14
-            nix_system: aarch64-darwin
-    runs-on: ${{ matrix.os }}
+    if: needs.release.outputs.release_created
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v22
-
-      - name: Setup Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
-
-      - name: Build with Nix
-        run: nix build . --system ${{ matrix.nix_system }}
-
-      - name: Prepare Release Assets
-        run: |
-          mkdir -p release && install -m 0755 result/bin/protoc-gen-aip-lint release/protoc-gen-aip-lint-${{ matrix.nix_system }}
+      - name: Download Binaries
+        uses: actions/download-artifact@v8
+        with:
+          pattern: sqlc-gen-queries-*
+          merge-multiple: true
+          skip-decompress: true
+          path: release/
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.release.outputs.tag_name }}
-          files: release/protoc-gen-aip-lint-${{ matrix.nix_system }}
+          files: release/*
